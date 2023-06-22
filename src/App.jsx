@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import './App.css'
 import Movies from './components/Movies';
 import useMovies from './hooks/useMovies';
@@ -9,8 +9,14 @@ function useSearch() {
 
   const [titulo, setTitulo] = useState('');
   const [error, setError] = useState(null);
+  const isFirstInput = useRef(true);
 
   useEffect(() => {
+
+    if (isFirstInput.current) {
+      isFirstInput.current = titulo === ''
+      return;
+    }
 
     if (titulo.length <= 3) {
       setError("Consulta mayor a 3 caracteres")
