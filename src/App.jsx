@@ -1,39 +1,55 @@
 
+import { useState } from 'react';
 import './App.css'
-import results from "./mocks/results.json";
-import noresults from "./mocks/no-results.json";
+import Movies from './components/Movies';
+import useMovies from './hooks/useMovies';
+import { useEffect } from 'react';
 
+function useSearch() {
+
+  const [titulo, setTitulo] = useState('');
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+
+    if (titulo.length <= 3) {
+      setError("Consulta mayor a 3 caracteres")
+      return;
+    }
+
+    setError(null);
+
+  }, [titulo]);
+
+  return { titulo, setTitulo, error }
+}
 function App() {
 
-  const movies = results.Search;
-  const hasMovies = movies?.length > 0;
+  const movies = useMovies();
+  const { titulo, setTitulo, error } = useSearch();
 
   const handleSubmit = (e) => {
-
+    e.preventDefault();
+    console.log(titulo)
   }
+
+  const handleOnChange = (e) => {
+    setTitulo(e.target.value);
+  }
+
   return (
     <div className='page'>
       <header>
-        <form className="form" action="" onSubmit={handleSubmit}>
-          <input name="titulo" placeholder='Avengers, Avatar ...' />
+        <form action="" onSubmit={handleSubmit}>
+          <input onChange={handleOnChange} value={titulo} name="titulo" placeholder='Avengers, Avatar ...' />
           <button>Buscar</button>
         </form>
       </header>
 
       <main>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <div>Resultado:</div>
-        {hasMovies ? (
-          <ul>
-            {
-              movies.map(movie => (
-                <li key={movie.imdbID}>{movie.Title}
-                  <img src={movie.Poster} alt="img-movie" />
-                </li>
-              ))
-            }
-          </ul>
-        ) :
-          (<p>No hay peliculas</p>)}
+        <Movies movies={movies} />
       </main>
 
     </div>
