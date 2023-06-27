@@ -31,16 +31,21 @@ function useSearch() {
 }
 function App() {
 
-  const movies = useMovies();
   const { titulo, setTitulo, error } = useSearch();
+  const [sort, setSort] = useState(false);
+  const {movies, loading, getMovies} = useMovies({titulo, sort});
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(titulo)
+    getMovies();
   }
 
   const handleOnChange = (e) => {
     setTitulo(e.target.value);
+  }
+
+  const handleSort = () => {
+    setSort(!sort);
   }
 
   return (
@@ -49,13 +54,17 @@ function App() {
         <form action="" onSubmit={handleSubmit}>
           <input onChange={handleOnChange} value={titulo} name="titulo" placeholder='Avengers, Avatar ...' />
           <button>Buscar</button>
+          <input onClick={handleSort} type='checkbox'/>
         </form>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
       </header>
 
       <main>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
         <div>Resultado:</div>
-        <Movies movies={movies} />
+        {
+          loading ? <p>Cargando ... </p> : 
+          <Movies movies={movies} />
+        }
       </main>
 
     </div>

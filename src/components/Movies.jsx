@@ -8,10 +8,10 @@ function NoResults() {
 function ListOfResults({ movies }) {
 
     return (
-        <ul>
+        <ul className="movies">
             {
                 movies.map(movie => (
-                    <li key={movie.id}>
+                    <li className="movie" key={movie.id}>
                         <h3>{movie.title}</h3>
                         <p>{movie.year}</p>
                         <img src={movie.image} alt={movie.title} />
@@ -24,7 +24,6 @@ function ListOfResults({ movies }) {
 
 export default function Movies({ movies }) {
     const hasMovies = movies?.length > 0;
-
     return (
         hasMovies ? <ListOfResults movies={movies} /> : <NoResults />
     )
