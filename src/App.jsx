@@ -37,11 +37,13 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    getMovies();
+    getMovies({titulo});
   }
 
   const handleOnChange = (e) => {
-    setTitulo(e.target.value);
+    const search = e.target.value
+    setTitulo(search);
+    getMovies({titulo: search})
   }
 
   const handleSort = () => {
