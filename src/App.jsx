@@ -1,5 +1,5 @@
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import './App.css'
 import Movies from './components/Movies';
 import useMovies from './hooks/useMovies';
@@ -35,10 +35,12 @@ function App() {
   const { titulo, setTitulo, error } = useSearch();
   const [sort, setSort] = useState(false);
   const { movies, loading, getMovies } = useMovies({ titulo, sort });
-  const debounceGetMovies = debounce(titulo => {
-    console.log("busqueda", titulo);
-    getMovies({ titulo })
-  }, 500)
+  const debounceGetMovies = useCallback(
+    debounce(titulo => {
+        getMovies({ titulo })
+      }, 300)
+  , [getMovies])
+ 
 
   const handleSubmit = (e) => {
     e.preventDefault();
