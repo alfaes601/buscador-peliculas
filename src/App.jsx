@@ -4,6 +4,7 @@ import './App.css'
 import Movies from './components/Movies';
 import useMovies from './hooks/useMovies';
 import { useEffect } from 'react';
+import debounce from "just-debounce-it";
 
 function useSearch() {
 
@@ -33,17 +34,21 @@ function App() {
 
   const { titulo, setTitulo, error } = useSearch();
   const [sort, setSort] = useState(false);
-  const {movies, loading, getMovies} = useMovies({titulo, sort});
+  const { movies, loading, getMovies } = useMovies({ titulo, sort });
+  const debounceGetMovies = debounce(titulo => {
+    console.log("busqueda", titulo);
+    getMovies({ titulo })
+  }, 500)
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    getMovies({titulo});
+    getMovies({ titulo });
   }
 
   const handleOnChange = (e) => {
     const search = e.target.value
     setTitulo(search);
-    getMovies({titulo: search})
+    debounceGetMovies(search)
   }
 
   const handleSort = () => {
@@ -56,7 +61,7 @@ function App() {
         <form action="" onSubmit={handleSubmit}>
           <input onChange={handleOnChange} value={titulo} name="titulo" placeholder='Avengers, Avatar ...' />
           <button>Buscar</button>
-          <input onClick={handleSort} type='checkbox'/>
+          <input onClick={handleSort} type='checkbox' />
         </form>
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </header>
@@ -64,8 +69,8 @@ function App() {
       <main>
         <div>Resultado:</div>
         {
-          loading ? <p>Cargando ... </p> : 
-          <Movies movies={movies} />
+          loading ? <p>Cargando ... </p> :
+            <Movies movies={movies} />
         }
       </main>
 

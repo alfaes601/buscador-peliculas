@@ -8,7 +8,7 @@ export default function useMovies({ titulo, sort }) {
   const previousSearch = useRef(titulo);
 
   const getMovies = useCallback(async ({ titulo }) => {
-    //return async ({ titulo }) => {
+    //return async ({ titulo }) => { //esto es con useMemo
     if (titulo === previousSearch.current) return;
     try {
       setLoading(true);
